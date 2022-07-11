@@ -11,7 +11,7 @@ def save_clients(file):
         wb = openpyxl.load_workbook(file)
         ws = wb.get_sheet_by_name('client')
     except (ValueError, KeyError):
-        raise ValidationError(detail='Incorrect sheet or file name')
+        raise ValidationError(detail={'Error': 'Incorrect sheet or file name'})
 
     clients_objects = []
     for i in range(2, ws.max_row + 1):
@@ -23,15 +23,15 @@ def save_clients(file):
     try:
         Clients.objects.bulk_create(clients_objects)
     except IntegrityError:
-        raise ValidationError(detail='Clients name already exists')
+        raise ValidationError(detail={'Error': 'Clients name already exists'})
 
     try:
         ws = wb.get_sheet_by_name('organization')
     except (ValueError, KeyError):
-        raise ValidationError(detail='Incorrect sheet or file name')
+        raise ValidationError(detail={'Error': 'Incorrect sheet or file name'})
 
     if ws.max_row <= 1:
-        raise ValidationError(detail='Empty filling')
+        raise ValidationError(detail={'Error': 'Empty filling'})
 
     organization_objects = []
     for i in range(2, ws.max_row + 1):
@@ -48,7 +48,7 @@ def save_clients(file):
     try:
         Organization.objects.bulk_create(organization_objects)
     except IntegrityError:
-        raise ValidationError(detail='Organization name already exists')
+        raise ValidationError(detail={'Error': 'Organization name already exists'})
 
 
 def save_bills(file):
@@ -57,10 +57,10 @@ def save_bills(file):
         wb = openpyxl.load_workbook(file)
         ws = wb.get_sheet_by_name('Лист1')
     except (ValueError, KeyError):
-        raise ValidationError(detail='Incorrect sheet or file name')
+        raise ValidationError(detail={'Error': 'Incorrect sheet or file name'})
 
     if ws.max_row <= 1:
-        raise ValidationError(detail='Empty filling')
+        raise ValidationError(detail={'Error': 'Empty filling'})
 
     object_list = []
     for i in range(2, ws.max_row + 1):
@@ -81,4 +81,4 @@ def save_bills(file):
     try:
         Bills.objects.bulk_create(object_list)
     except IntegrityError:
-        raise ValidationError(detail='Client or organization name already exists')
+        raise ValidationError(detail={'Error': 'Client or organization name already exists'})

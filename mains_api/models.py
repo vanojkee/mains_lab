@@ -22,6 +22,10 @@ class Clients(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Client'
+        verbose_name_plural = 'Clients'
+
 
 class Organization(models.Model):
     client_name = models.CharField(max_length=100, unique=False, db_index=False)
@@ -30,6 +34,8 @@ class Organization(models.Model):
     client = models.ForeignKey(Clients, on_delete=models.CASCADE)
 
     class Meta:
+        verbose_name = 'Organization'
+        verbose_name_plural = 'Organizations'
         unique_together = [['client_name', 'name']]
 
     def __str__(self):
@@ -42,13 +48,12 @@ class Bills(models.Model):
     number = models.IntegerField()
     date = models.DateTimeField()
     service = models.CharField(max_length=255, unique=False)
-    bills_sum = models.DecimalField(
-        max_digits=9,
-        decimal_places=2,
-    )
-
-    class Meta:
-        unique_together = [['client_org', 'number']]
+    bills_sum = models.DecimalField(max_digits=9, decimal_places=2)
 
     def __str__(self) -> str:
         return f'{self.client_name} - {self.client_org} № {self.number} - {self.bills_sum}'
+
+    class Meta:
+        verbose_name = 'Bill'
+        verbose_name_plural = 'Bills'
+        unique_together = [['client_org', 'number']]
